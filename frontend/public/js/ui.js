@@ -2,7 +2,7 @@
    ui.js - shared interface helpers
    Shell (sidebar + navigation), toasts, modals, formatting.
    ===================================================================== */
-import api from './api.js';
+import api, { HEALTH_TIMEOUT } from './api.js';
 
 export const $ = (selector, scope = document) => scope.querySelector(selector);
 export const $$ = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
@@ -84,12 +84,16 @@ export async function refreshDbStatus() {
   const label = $('#dbLabel');
   if (!dot) return;
   try {
-    const { data } = await api.get('/health');
+    // The health check gets the long timeout: on the free tier it may
+    // have to wake the sleeping service up first.
+    const { data } = await api.get('/health', undefined, { timeout: HEALTH_TIMEOUT });
     dot.classList.remove('off');
     label.textContent = `MySQL ${data.database.version} connected`;
-  } catch {
+    label.title = `Schema: ${data.database.db}`;
+  } catch (error) {
     dot.classList.add('off');
-    label.textContent = 'Database unreachable';
+    label.textContent = error.code === 'TIMEOUT' ? 'Database starting up' : 'Database unreachable';
+    label.title = error.message;
   }
 }
 

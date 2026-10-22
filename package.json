@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node backend/server.js",
     "dev": "node --watch backend/server.js",
-    "test": "node --test tests/",
+    "test": "node --test tests/*.test.js",
     "db:install": "bash database/run_all.sh",
     "db:lab": "mysql -uroot --table < database/09_ddl_lab.sql",
     "db:reports": "mysql -uroot --table < database/08_reports.sql",
