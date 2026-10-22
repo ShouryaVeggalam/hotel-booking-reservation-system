@@ -14,14 +14,13 @@
         window.STAYWISE_API_BASE = '/api';
       Same origin (default). The page calls /api/... on its own host.
       In production the `vercel.json` rewrite forwards those calls to
-      the Render API. No CORS is involved.
+      the live backend at https://staywise-api-eight.vercel.app.
+      No CORS is involved when using the rewrite.
 
-        window.STAYWISE_API_BASE = 'https://staywise-api.onrender.com/api';
-      Direct to the API host. The browser calls the Render API
+        window.STAYWISE_API_BASE = 'https://staywise-api-eight.vercel.app/api';
+      Direct to the API host. The browser calls the Vercel API
       directly. This requires the backend CORS_ORIGIN to list the
-      frontend origin. This mode is the more robust of the two on a
-      free tier, because a request that has to wake a sleeping service
-      up is not cut short by a proxy in front of it.
+      frontend origin.
 
    2. The timeout of a normal data request, in milliseconds.
 

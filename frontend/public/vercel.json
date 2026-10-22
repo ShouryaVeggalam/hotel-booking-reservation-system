@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://staywise-api.onrender.com/api/:path*"
+      "destination": "https://staywise-api-eight.vercel.app/api/:path*"
     }
   ],
   "headers": [
