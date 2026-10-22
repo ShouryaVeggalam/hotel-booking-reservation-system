@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rooms | Staywise</title>
+    <link rel="stylesheet" href="css/theme.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" id="sidebar"></aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="row" style="gap: 12px; flex-wrap: nowrap;">
+            <button class="btn btn-icon menu-toggle" aria-label="Toggle navigation">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+            </button>
+            <div class="title">
+              <h1>Rooms</h1>
+              <p>Room inventory, condition and room categories</p>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <button class="btn" id="typeBtn">Room categories</button>
+            <button class="btn btn-primary" id="addRoomBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              Add room
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="stack">
+            <section class="grid stats" id="roomStats"></section>
+
+            <section class="card">
+              <div class="card-head">
+                <div>
+                  <h2>Room directory</h2>
+                  <p class="sub">Search and filter the physical rooms of the hotel</p>
+                </div>
+                <div class="filters" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+                  <div class="field">
+                    <input type="search" id="roomSearch" placeholder="Search room number or type" />
+                  </div>
+                  <div class="field">
+                    <select id="statusFilter">
+                      <option value="">All statuses</option>
+                      <option value="Available">Available</option>
+                      <option value="Maintenance">Maintenance</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <select id="typeFilter">
+                      <option value="">All categories</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body flush">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Room</th>
+                        <th>Category</th>
+                        <th class="num">Floor</th>
+                        <th class="num">Capacity</th>
+                        <th class="num">Nightly rate</th>
+                        <th class="num">Active bookings</th>
+                        <th>Status</th>
+                        <th class="right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="roomRows"></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Add / edit room -->
+    <div class="modal-backdrop" id="roomModal">
+      <div class="modal">
+        <div class="modal-head">
+          <div>
+            <h2 id="roomModalTitle">Add a room</h2>
+            <p class="sub">Room numbers must be unique</p>
+          </div>
+          <button class="icon-btn" data-close="roomModal" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <form id="roomForm">
+          <div class="modal-body">
+            <div class="form-grid">
+              <div class="field">
+                <label for="roomNumber">Room number</label>
+                <input type="text" id="roomNumber" name="room_number" maxlength="20" required placeholder="e.g. 401" />
+              </div>
+              <div class="field">
+                <label for="roomType">Category</label>
+                <select id="roomType" name="room_type_id" required></select>
+              </div>
+              <div class="field">
+                <label for="roomFloor">Floor</label>
+                <input type="number" id="roomFloor" name="floor_no" min="1" max="200" value="1" required />
+              </div>
+              <div class="field">
+                <label for="roomStatus">Status</label>
+                <select id="roomStatus" name="room_status">
+                  <option value="Available">Available</option>
+                  <option value="Maintenance">Maintenance</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-foot">
+            <button type="button" class="btn" data-close="roomModal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="roomSubmit">Save room</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Room categories -->
+    <div class="modal-backdrop" id="typeModal">
+      <div class="modal wide">
+        <div class="modal-head">
+          <div>
+            <h2>Room categories</h2>
+            <p class="sub">Price, capacity and description of each category</p>
+          </div>
+          <button class="icon-btn" data-close="typeModal" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th class="num">Rate</th>
+                  <th class="num">Capacity</th>
+                  <th class="num">Rooms</th>
+                  <th>Description</th>
+                  <th class="right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="typeRows"></tbody>
+            </table>
+          </div>
+
+          <div class="divider"></div>
+
+          <h3 id="typeFormTitle">Add a category</h3>
+          <form id="typeForm" style="margin-top: 12px">
+            <div class="form-grid">
+              <div class="field">
+                <label for="typeName">Name</label>
+                <input type="text" id="typeName" maxlength="50" required placeholder="e.g. Deluxe" />
+              </div>
+              <div class="field">
+                <label for="typePrice">Base price</label>
+                <input type="number" id="typePrice" min="1" step="0.01" required placeholder="2500" />
+              </div>
+              <div class="field">
+                <label for="typeCapacity">Capacity</label>
+                <input type="number" id="typeCapacity" min="1" max="50" required placeholder="2" />
+              </div>
+              <div class="field wide">
+                <label for="typeDescription">Description</label>
+                <input type="text" id="typeDescription" maxlength="255" placeholder="Short description" />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn hidden" id="typeCancel">Cancel edit</button>
+              <button type="submit" class="btn btn-primary" id="typeSubmit">Add category</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+    <script type="module" src="js/rooms.js"></script>
+  </body>
+</html>

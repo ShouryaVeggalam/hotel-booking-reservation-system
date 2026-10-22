@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Availability | Staywise</title>
+    <link rel="stylesheet" href="css/theme.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" id="sidebar"></aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="row" style="gap: 12px; flex-wrap: nowrap;">
+            <button class="btn btn-icon menu-toggle" aria-label="Toggle navigation">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+            </button>
+            <div class="title">
+              <h1>Room availability</h1>
+              <p>Search powered by the <span class="mono">sp_check_room_availability</span> procedure</p>
+            </div>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="stack">
+            <section class="card">
+              <div class="card-head">
+                <div>
+                  <h2>Find a room</h2>
+                  <p class="sub">
+                    A room is available when no reservation in status Pending, Confirmed or Checked In
+                    overlaps the requested dates
+                  </p>
+                </div>
+              </div>
+              <div class="card-body">
+                <form id="searchForm" class="filters">
+                  <div class="field">
+                    <label for="checkIn">Check-in</label>
+                    <input type="date" id="checkIn" required />
+                  </div>
+                  <div class="field">
+                    <label for="checkOut">Check-out</label>
+                    <input type="date" id="checkOut" required />
+                  </div>
+                  <div class="field">
+                    <label for="adults">Adults</label>
+                    <input type="number" id="adults" min="1" max="50" value="1" required />
+                  </div>
+                  <div class="field">
+                    <label for="children">Children</label>
+                    <input type="number" id="children" min="0" max="50" value="0" required />
+                  </div>
+                  <div class="actions">
+                    <button type="submit" class="btn btn-primary" id="searchBtn">Search availability</button>
+                    <button type="button" class="btn" id="resetBtn">Reset</button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-head">
+                <div>
+                  <h2 id="resultTitle">Available rooms</h2>
+                  <p class="sub" id="resultSub">Run a search to see the rooms the database returns</p>
+                </div>
+                <span class="badge badge-brass" id="resultCount">0 rooms</span>
+              </div>
+              <div class="card-body flush">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Room</th>
+                        <th>Category</th>
+                        <th class="num">Floor</th>
+                        <th class="num">Capacity</th>
+                        <th class="num">Nightly rate</th>
+                        <th class="num">Nights</th>
+                        <th class="num">Estimated total</th>
+                        <th class="right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="resultRows"></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Booking modal -->
+    <div class="modal-backdrop" id="bookingModal">
+      <div class="modal">
+        <div class="modal-head">
+          <div>
+            <h2>Create the reservation</h2>
+            <p class="sub" id="bookingSub">The database locks the room while it books it</p>
+          </div>
+          <button class="icon-btn" data-close="bookingModal" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <form id="bookingForm">
+          <div class="modal-body">
+            <div class="alert alert-info" id="bookingInfo" style="margin-bottom: 16px"></div>
+            <div class="form-grid">
+              <div class="field wide">
+                <label for="bookCustomer">Guest</label>
+                <select id="bookCustomer" required></select>
+              </div>
+              <div class="field">
+                <label for="bookRoom">Room</label>
+                <select id="bookRoom" required></select>
+              </div>
+              <div class="field">
+                <label for="bookCheckIn">Check-in</label>
+                <input type="date" id="bookCheckIn" required />
+              </div>
+              <div class="field">
+                <label for="bookCheckOut">Check-out</label>
+                <input type="date" id="bookCheckOut" required />
+              </div>
+              <div class="field">
+                <label for="bookAdults">Adults</label>
+                <input type="number" id="bookAdults" min="1" max="50" required />
+              </div>
+              <div class="field">
+                <label for="bookChildren">Children</label>
+                <input type="number" id="bookChildren" min="0" max="50" required />
+              </div>
+              <div class="field wide">
+                <label for="bookRemarks">Remarks</label>
+                <input type="text" id="bookRemarks" maxlength="255" placeholder="Optional note" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-foot">
+            <button type="button" class="btn" data-close="bookingModal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="bookSubmit">Confirm booking</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+    <script type="module" src="js/availability.js"></script>
+  </body>
+</html>

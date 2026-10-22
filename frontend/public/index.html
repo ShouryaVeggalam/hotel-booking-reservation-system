@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | Staywise</title>
+    <meta name="description" content="Operational dashboard for the Hotel Booking and Reservation Management System." />
+    <link rel="stylesheet" href="css/theme.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23a8742a'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' font-weight='700' fill='%23fff' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" id="sidebar"></aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="row" style="gap: 12px; flex-wrap: nowrap;">
+            <button class="btn btn-icon menu-toggle" aria-label="Toggle navigation">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+            </button>
+            <div class="title">
+              <h1>Dashboard</h1>
+              <p>Live operational view, read straight from the hotel database</p>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <div class="field" style="min-width: 160px">
+              <label for="dashDate" class="muted small">Reporting day</label>
+              <input type="date" id="dashDate" />
+            </div>
+            <button class="btn" id="refreshBtn" title="Reload the dashboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-2.64-6.36" /><path d="M21 3v6h-6" />
+              </svg>
+              Refresh
+            </button>
+            <a class="btn btn-primary" href="reservations.html#new">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              New booking
+            </a>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="stack">
+            <section class="grid stats" id="statCards"></section>
+
+            <section class="grid two">
+              <div class="card">
+                <div class="card-head">
+                  <div>
+                    <h2>Today's arrivals and departures</h2>
+                    <p class="sub" id="movementSub">Bookings that start or end on the selected day</p>
+                  </div>
+                </div>
+                <div class="card-body flush">
+                  <div class="table-wrap">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Reservation</th>
+                          <th>Guest</th>
+                          <th>Room</th>
+                          <th>Direction</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody id="movementRows"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-head">
+                  <div>
+                    <h2>Room inventory</h2>
+                    <p class="sub">Every room with its live booking load</p>
+                  </div>
+                  <a class="btn btn-sm" href="rooms.html">Manage rooms</a>
+                </div>
+                <div class="card-body flush">
+                  <div class="table-wrap">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Room</th>
+                          <th>Type</th>
+                          <th>Capacity</th>
+                          <th class="num">Rate</th>
+                          <th class="num">Active</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody id="roomRows"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="card-head">
+                <div>
+                  <h2>Recent reservations</h2>
+                  <p class="sub">The ten most recent bookings in the system</p>
+                </div>
+                <a class="btn btn-sm" href="reservations.html">View all</a>
+              </div>
+              <div class="card-body flush">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th>Stay</th>
+                        <th class="num">Nights</th>
+                        <th class="num">Bill</th>
+                        <th class="num">Balance</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="reservationRows"></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+    <script type="module" src="js/dashboard.js"></script>
+  </body>
+</html>

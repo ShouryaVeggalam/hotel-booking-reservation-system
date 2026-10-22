@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payments | Staywise</title>
+    <link rel="stylesheet" href="css/theme.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" id="sidebar"></aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="row" style="gap: 12px; flex-wrap: nowrap;">
+            <button class="btn btn-icon menu-toggle" aria-label="Toggle navigation">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+            </button>
+            <div class="title">
+              <h1>Payments</h1>
+              <p>Money received against reservations, and what is still owed</p>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <button class="btn btn-primary" id="newPaymentBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              Record payment
+            </button>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="stack">
+            <section class="grid stats" id="paymentStats"></section>
+
+            <section class="card">
+              <div class="card-head">
+                <div>
+                  <h2>Payment ledger</h2>
+                  <p class="sub">Only payments with the status Paid reduce the outstanding balance</p>
+                </div>
+                <div class="filters" style="grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));">
+                  <div class="field">
+                    <label for="fromDate" class="muted small">From</label>
+                    <input type="date" id="fromDate" />
+                  </div>
+                  <div class="field">
+                    <label for="toDate" class="muted small">To</label>
+                    <input type="date" id="toDate" />
+                  </div>
+                  <div class="field">
+                    <select id="methodFilter">
+                      <option value="">All methods</option>
+                      <option value="Cash">Cash</option>
+                      <option value="Card">Card</option>
+                      <option value="UPI">UPI</option>
+                      <option value="Bank_Transfer">Bank transfer</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <select id="statusFilter">
+                      <option value="">All statuses</option>
+                      <option value="Paid">Paid</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Refunded">Refunded</option>
+                      <option value="Failed">Failed</option>
+                    </select>
+                  </div>
+                  <div class="actions">
+                    <button class="btn" id="clearFilters">Clear</button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body flush">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th class="num">Bill</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                        <th class="num">Amount</th>
+                        <th>Reference</th>
+                      </tr>
+                    </thead>
+                    <tbody id="paymentRows"></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Record a payment from the ledger -->
+    <div class="modal-backdrop" id="paymentModal">
+      <div class="modal" style="max-width: 540px">
+        <div class="modal-head">
+          <div>
+            <h2>Record a payment</h2>
+            <p class="sub">The database checks the amount against the remaining balance</p>
+          </div>
+          <button class="icon-btn" data-close="paymentModal" aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <form id="paymentForm">
+          <div class="modal-body">
+            <div class="form-grid">
+              <div class="field wide">
+                <label for="payReservation">Reservation</label>
+                <select id="payReservation" required></select>
+              </div>
+              <div class="field">
+                <label for="payAmount">Amount</label>
+                <input type="number" id="payAmount" min="0.01" step="0.01" required />
+              </div>
+              <div class="field">
+                <label for="payMethod">Method</label>
+                <select id="payMethod" required>
+                  <option value="Cash">Cash</option>
+                  <option value="Card">Card</option>
+                  <option value="UPI">UPI</option>
+                  <option value="Bank_Transfer">Bank transfer</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="payStatus">Status</label>
+                <select id="payStatus">
+                  <option value="Paid">Paid</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Refunded">Refunded</option>
+                  <option value="Failed">Failed</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="payReference">Reference</label>
+                <input type="text" id="payReference" maxlength="60" placeholder="Optional, must be unique" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-foot">
+            <button type="button" class="btn" data-close="paymentModal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="paySubmit">Record payment</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+    <script type="module" src="js/payments.js"></script>
+  </body>
+</html>

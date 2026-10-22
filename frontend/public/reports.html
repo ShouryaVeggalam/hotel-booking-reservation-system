@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports | Staywise</title>
+    <link rel="stylesheet" href="css/theme.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar" id="sidebar"></aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="row" style="gap: 12px; flex-wrap: nowrap;">
+            <button class="btn btn-icon menu-toggle" aria-label="Toggle navigation">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+            </button>
+            <div class="title">
+              <h1>Reports</h1>
+              <p>Seven database driven reports, each one a real SQL query</p>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <button class="btn" id="exportBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v12" /><path d="m7 11 5 5 5-5" /><path d="M4 21h16" />
+              </svg>
+              Export CSV
+            </button>
+            <button class="btn btn-primary" id="runBtn">Run report</button>
+          </div>
+        </header>
+
+        <main class="content">
+          <div class="stack">
+            <section class="card">
+              <div class="card-head">
+                <div>
+                  <h2>Choose a report</h2>
+                  <p class="sub" id="reportDescription"></p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row" id="reportTabs" style="margin-bottom: 16px"></div>
+                <div class="filters" id="reportFilters" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));"></div>
+              </div>
+            </section>
+
+            <section class="grid stats" id="reportStats"></section>
+
+            <section class="card">
+              <div class="card-head">
+                <div>
+                  <h2 id="resultTitle">Result</h2>
+                  <p class="sub" id="resultSub"></p>
+                </div>
+                <span class="badge badge-brass" id="resultCount">0 rows</span>
+              </div>
+              <div class="card-body flush">
+                <div class="table-wrap">
+                  <table>
+                    <thead id="reportHead"></thead>
+                    <tbody id="reportRows"></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+    <script type="module" src="js/reports.js"></script>
+  </body>
+</html>

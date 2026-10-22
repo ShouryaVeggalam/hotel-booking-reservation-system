@@ -1,0 +1,63 @@
+# =====================================================================
+# render.yaml - Render Blueprint for the Staywise API
+#
+# Applying this file in the Render dashboard (New > Blueprint) creates
+# the web service with the right build command, start command and
+# health check already configured. Only the environment variables that
+# contain secrets have to be typed in.
+#
+# The values marked `sync: false` are asked for by Render when the
+# blueprint is applied. Never write a real password into this file.
+# =====================================================================
+
+services:
+  - type: web
+    name: staywise-api
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    buildCommand: npm ci --omit=dev
+    startCommand: node backend/server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22.23.3"
+
+      # --- MySQL (Aiven) ---------------------------------------------
+      # DB_HOST, DB_PORT and DB_NAME are printed in the Aiven service
+      # connection page. DB_USER and DB_PASSWORD belong to the
+      # restricted application user created by
+      # database/deploy/create_app_user.sql.
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_CONNECTION_LIMIT
+        value: "5"
+
+      # --- TLS ------------------------------------------------------
+      # Aiven requires an encrypted connection. DB_SSL_CA holds the
+      # contents of the ca.crt file that Aiven provides (the \n are
+      # literal backslash-n characters).
+      - key: DB_SSL
+        value: "true"
+      - key: DB_SSL_REJECT_UNAUTHORIZED
+        value: "true"
+      - key: DB_SSL_CA
+        sync: false
+
+      # --- Browser access --------------------------------------------
+      # The exact URL of the Vercel deployment, for example
+      # https://staywise-hotel-booking.vercel.app
+      - key: CORS_ORIGIN
+        sync: false
