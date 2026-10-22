@@ -85,6 +85,7 @@ router.get('/customers/:id', asyncHandler(customerController.getCustomer));
 router.get('/customers/:id/reservations', asyncHandler(customerController.getCustomerReservations));
 router.post('/customers', asyncHandler(customerController.createCustomer));
 router.put('/customers/:id', asyncHandler(customerController.updateCustomer));
+router.delete('/customers/:id', asyncHandler(customerController.deleteCustomer));
 
 /* --------------------------- availability ------------------------- */
 router.get('/availability', asyncHandler(reservationController.checkAvailability));
@@ -96,11 +97,13 @@ router.post('/reservations', asyncHandler(reservationController.createReservatio
 router.put('/reservations/:id', asyncHandler(reservationController.updateReservation));
 router.patch('/reservations/:id/status', asyncHandler(reservationController.updateReservationStatus));
 router.post('/reservations/:id/cancel', asyncHandler(reservationController.cancelReservation));
+router.delete('/reservations/:id', asyncHandler(reservationController.deleteReservation));
 
 /* ----------------------------- payments --------------------------- */
 router.get('/payments', asyncHandler(reservationController.listPayments));
 router.post('/payments', asyncHandler(reservationController.createPayment));
 router.get('/reservations/:id/payments', asyncHandler(reservationController.getPaymentHistory));
+router.delete('/payments/:id', asyncHandler(reservationController.deletePayment));
 
 /* ------------------------------ reports --------------------------- */
 router.get('/reports/reservations', asyncHandler(reportController.reservationDetails));

@@ -86,6 +86,11 @@ export async function cancelReservation(req, res) {
   res.json({ success: true, data: reservation });
 }
 
+export async function deleteReservation(req, res) {
+  const result = await reservationService.deleteReservation(requirePositiveInt(req.params.id, 'id'));
+  res.json({ success: true, data: result });
+}
+
 /* ---------------- availability ---------------- */
 
 export async function checkAvailability(req, res) {
@@ -134,6 +139,11 @@ export async function getPaymentHistory(req, res) {
   res.json({ success: true, data });
 }
 
+export async function deletePayment(req, res) {
+  const result = await availabilityService.deletePayment(requirePositiveInt(req.params.id, 'id'));
+  res.json({ success: true, data: result });
+}
+
 export { PAYMENT_METHODS, PAYMENT_STATUSES };
 export default {
   listReservations,
@@ -142,8 +152,10 @@ export default {
   updateReservationStatus,
   updateReservation,
   cancelReservation,
+  deleteReservation,
   checkAvailability,
   listPayments,
   createPayment,
   getPaymentHistory,
+  deletePayment,
 };

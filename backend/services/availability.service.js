@@ -1,7 +1,7 @@
 /**
  * Availability and payment services.
  */
-import { query, queryOne, callProcedure } from '../db/pool.js';
+import { query, queryOne, execute, callProcedure } from '../db/pool.js';
 import ApiError from '../utils/apiError.js';
 
 /**
@@ -115,4 +115,30 @@ export async function getPaymentHistory(reservationId) {
   return { reservation, payments };
 }
 
-export default { checkAvailability, createPayment, listPayments, getPaymentHistory };
+/**
+ * Remove a payment row.
+ *
+ * A payment that is linked to a reservation can be removed, for
+ * example when it was entered by mistake. The balance of the
+ * reservation is recalculated by the view, so the ledger and the
+ * balance can never drift apart.
+ */
+export async function deletePayment(paymentId) {
+  const existing = await queryOne(
+    `SELECT payment_id, reservation_id, amount, payment_status
+       FROM payment WHERE payment_id = ?`,
+    [paymentId],
+  );
+  if (!existing) throw ApiError.notFound(`Payment ${paymentId} does not exist.`);
+
+  await execute('DELETE FROM payment WHERE payment_id = ?', [paymentId]);
+  return { deleted: true, payment_id: Number(paymentId), reservation_id: existing.reservation_id };
+}
+
+export default {
+  checkAvailability,
+  createPayment,
+  listPayments,
+  getPaymentHistory,
+  deletePayment,
+};

@@ -211,6 +211,37 @@ export async function updateReservation(reservationId, { check_in_date, check_ou
   return getReservation(reservationId);
 }
 
+/**
+ * Remove a reservation.
+ *
+ * A reservation that has payments recorded against it is protected:
+ * the money trail must stay complete, so the API refuses the delete
+ * and asks for a cancellation instead. A reservation without payments
+ * is removed together with its audit trail, which the foreign key
+ * ON DELETE CASCADE takes care of.
+ */
+export async function deleteReservation(reservationId) {
+  const existing = await queryOne(
+    `SELECT reservation_id, reservation_status FROM reservation WHERE reservation_id = ?`,
+    [reservationId],
+  );
+  if (!existing) throw ApiError.notFound(`Reservation ${reservationId} does not exist.`);
+
+  const paymentCount = await queryOne(
+    `SELECT COUNT(*) AS payment_count FROM payment WHERE reservation_id = ?`,
+    [reservationId],
+  );
+  if (Number(paymentCount.payment_count) > 0) {
+    throw ApiError.conflict(
+      'This reservation has payments recorded against it. Cancel the reservation instead of deleting it.',
+      { payment_count: Number(paymentCount.payment_count) },
+    );
+  }
+
+  await execute('DELETE FROM reservation WHERE reservation_id = ?', [reservationId]);
+  return { deleted: true, reservation_id: Number(reservationId) };
+}
+
 export default {
   listReservations,
   getReservation,
@@ -218,4 +249,5 @@ export default {
   updateReservationStatus,
   cancelReservation,
   updateReservation,
+  deleteReservation,
 };

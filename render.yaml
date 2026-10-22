@@ -8,6 +8,9 @@
 #
 # The values marked `sync: false` are asked for by Render when the
 # blueprint is applied. Never write a real password into this file.
+#
+# The database is NOT defined here: it lives on Aiven, because Render
+# only offers managed PostgreSQL, not managed MySQL.
 # =====================================================================
 
 services:
@@ -28,10 +31,10 @@ services:
         value: "22.23.3"
 
       # --- MySQL (Aiven) ---------------------------------------------
-      # DB_HOST, DB_PORT and DB_NAME are printed in the Aiven service
-      # connection page. DB_USER and DB_PASSWORD belong to the
-      # restricted application user created by
-      # database/deploy/create_app_user.sql.
+      # DB_HOST, DB_PORT and DB_NAME are printed on the "Connection"
+      # page of the Aiven service. DB_USER and DB_PASSWORD belong to
+      # the restricted application user created by
+      # database/deploy/create_app_user.sql - not to avnadmin.
       - key: DB_HOST
         sync: false
       - key: DB_PORT
@@ -47,8 +50,9 @@ services:
 
       # --- TLS ------------------------------------------------------
       # Aiven requires an encrypted connection. DB_SSL_CA holds the
-      # contents of the ca.crt file that Aiven provides (the \n are
-      # literal backslash-n characters).
+      # contents of the ca.crt file that Aiven provides. Paste it as
+      # one line with the line breaks written as \n, for example
+      #   -----BEGIN CERTIFICATE-----\nMIIB...\n-----END CERTIFICATE-----
       - key: DB_SSL
         value: "true"
       - key: DB_SSL_REJECT_UNAUTHORIZED
@@ -58,6 +62,6 @@ services:
 
       # --- Browser access --------------------------------------------
       # The exact URL of the Vercel deployment, for example
-      # https://staywise-hotel-booking.vercel.app
+      # https://staywise-dbms.vercel.app
       - key: CORS_ORIGIN
         sync: false

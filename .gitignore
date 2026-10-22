@@ -28,3 +28,4 @@ database/_backup/
 # Python build artefacts
 __pycache__/
 *.pyc
+.vercel

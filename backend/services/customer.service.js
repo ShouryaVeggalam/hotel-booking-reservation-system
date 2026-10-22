@@ -87,10 +87,35 @@ export async function updateCustomer(customerId, { first_name, last_name, phone,
   return getCustomer(customerId);
 }
 
+/**
+ * Remove a customer.
+ *
+ * A customer that still has reservations cannot be removed, because
+ * the foreign key would either block the delete or silently take the
+ * bookings with it. The API refuses the delete and names the reason.
+ */
+export async function deleteCustomer(customerId) {
+  const existing = await getCustomer(customerId);
+  const reservationCount = await queryOne(
+    `SELECT COUNT(*) AS reservation_count FROM reservation WHERE customer_id = ?`,
+    [customerId],
+  );
+  if (Number(reservationCount.reservation_count) > 0) {
+    throw ApiError.conflict(
+      'This customer still has reservations. Cancel or delete them first.',
+      { reservation_count: Number(reservationCount.reservation_count) },
+    );
+  }
+
+  await execute('DELETE FROM customer WHERE customer_id = ?', [customerId]);
+  return { deleted: true, customer_id: Number(existing.customer_id) };
+}
+
 export default {
   listCustomers,
   getCustomer,
   getCustomerReservations,
   createCustomer,
   updateCustomer,
+  deleteCustomer,
 };

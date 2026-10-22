@@ -1,0 +1,18 @@
+# Files that must never be uploaded to Vercel.
+#
+# The deployment source is the whole repository, because the Vercel
+# project uses "frontend/public" as its Root Directory. Everything
+# outside that folder is ignored by the build, but it is still better
+# not to upload it.
+
+node_modules
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+frontend/public/.env.local
+frontend/public/.vercel
+database/_backup
+*.log
+.DS_Store

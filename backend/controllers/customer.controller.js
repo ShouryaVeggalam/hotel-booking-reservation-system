@@ -54,10 +54,16 @@ export async function updateCustomer(req, res) {
   res.json({ success: true, data: customer });
 }
 
+export async function deleteCustomer(req, res) {
+  const result = await customerService.deleteCustomer(requirePositiveInt(req.params.id, 'id'));
+  res.json({ success: true, data: result });
+}
+
 export default {
   listCustomers,
   getCustomer,
   getCustomerReservations,
   createCustomer,
   updateCustomer,
+  deleteCustomer,
 };
