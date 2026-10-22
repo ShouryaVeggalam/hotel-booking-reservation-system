@@ -7,36 +7,10 @@
    `process.env` mechanism does not exist. Everything is therefore
    configured in one small file that every page loads.
 
-   Three settings live here:
-
-   1. The address of the API
-
-        window.STAYWISE_API_BASE = '/api';
-      Same origin (default). The page calls /api/... on its own host.
-      In production the `vercel.json` rewrite forwards those calls to
-      the live backend at https://staywise-api-eight.vercel.app.
-      No CORS is involved when using the rewrite.
-
-        window.STAYWISE_API_BASE = 'https://staywise-api-eight.vercel.app/api';
-      Direct to the API host. The browser calls the Vercel API
-      directly. This requires the backend CORS_ORIGIN to list the
-      frontend origin.
-
-   2. The timeout of a normal data request, in milliseconds.
-
-        window.STAYWISE_API_TIMEOUT = 30000;
-      A request that is not answered in time is aborted and reported
-      as an error instead of leaving the page spinning forever.
-
-   3. The timeout of the health check, in milliseconds.
-
-        window.STAYWISE_API_HEALTH_TIMEOUT = 90000;
-      The health check may be the request that wakes a sleeping free
-      tier service up, so it is given more time.
-
-   Never put a database credential in this file. Only the public
-   address of the API belongs here.
+   The API base is set to the live Vercel backend so the browser calls
+   it directly. This avoids depending on a Vercel rewrite and works
+   even if the project root directory changes.
    ===================================================================== */
-window.STAYWISE_API_BASE = '/api';
+window.STAYWISE_API_BASE = 'https://staywise-api-eight.vercel.app/api';
 window.STAYWISE_API_TIMEOUT = 30000;
 window.STAYWISE_API_HEALTH_TIMEOUT = 90000;
